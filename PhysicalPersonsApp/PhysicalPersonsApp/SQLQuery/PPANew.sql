@@ -1,0 +1,41 @@
+CREATE TABLE Cities(
+	CityID INT PRIMARY KEY IDENTITY(1,1),
+	CityName NVARCHAR(30) NOT NULL
+)
+
+CREATE TABLE Persons(
+	ID INT PRIMARY KEY IDENTITY(1,1),
+	[NAME] NVARCHAR(50) NOT NULL,
+	Surname NVARCHAR(50) NOT NULL,
+	Gender NVARCHAR(20) NOT NULL,
+	PersonalNumber NVARCHAR(11) NOT NULL,
+	BirthDate DATE NOT NULL,
+	CityID INT NOT NULL,
+	[Image] NVARCHAR(MAX),
+	CONSTRAINT CHK_BirthDate 
+	CHECK (BirthDate <= CAST(GETDATE() AS DATE)),
+	CONSTRAINT CHK_PersonalNumber 
+	CHECK (LEN(PersonalNumber) = 11 
+	AND PersonalNumber NOT LIKE '%[^0-9]%'),
+	FOREIGN KEY(CityID)
+	REFERENCES Cities(CityID)
+)
+
+CREATE TABLE PhoneNumbers(
+	PhoneNumberID INT PRIMARY KEY IDENTITY(1,1),
+	PersonID INT NOT NULL,
+	PhoneType NVARCHAR(10) NOT NULL,
+	PhoneNumber NVARCHAR(50) NOT NULL,
+	FOREIGN KEY(PersonId)
+	REFERENCES Persons(ID)
+)
+
+CREATE TABLE RelatedPersons(
+	PersonID INT NOT NULL,
+	RelatedPersonID int NOT NULL,
+	RelationnshipType NVARCHAR(10) NOT NULL,
+	FOREIGN KEY(PersonID)
+	REFERENCES Persons(ID),
+	FOREIGN KEY (RelatedPersonID)
+	REFERENCES Persons(ID)
+)
